@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TrendPulse — Stay ahead. Create what's hot.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --text2: #888;
+    --text3: #555;
+    --accent: #D85A30;
+    --accent2: #f07040;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+
+  .app { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
+  .logo { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .tagline { font-size: 13px; color: var(--text2); margin-top: 3px; }
+  .saved-count { font-size: 13px; color: var(--text2); background: var(--surface); border: 0.5px solid var(--border); padding: 6px 14px; border-radius: 999px; }
+
+  .search-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .search-row input { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
+  .search-row input:focus { border-color: var(--border2); }
+  .search-row input::placeholder { color: var(--text3); }
+
+  .btn { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: var(--surface2); border-color: var(--accent); }
+  .btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+  .btn-accent:hover { background: var(--accent2); border-color: var(--accent2); }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 2rem; }
+  .chip { font-size: 12px; padding: 5px 14px; border-radius: 999px; border: 0.5px solid var(--border); background: transparent; cursor: pointer; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .chip:hover { border-color: var(--border2); color: var(--text); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+
+  .trends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+  .trend-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.15s; }
+  .trend-card:hover { border-color: var(--border2); background: var(--surface2); }
+  .trend-card.selected { border-color: var(--accent); background: var(--surface2); }
+  .trend-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+  .trend-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.35; }
+  .heat-badge { font-size: 10px; padding: 3px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+  .heat-5 { background: rgba(216,90,48,0.2); color: #f07040; }
+  .heat-4 { background: rgba(250,199,117,0.15); color: #EF9F27; }
+  .heat-3 { background: rgba(99,153,34,0.15); color: #97C459; }
+  .heat-2 { background: rgba(29,158,117,0.15); color: #5DCAA5; }
+  .heat-1 { background: rgba(136,135,128,0.15); color: #888; }
+  .trend-cat { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+  .trend-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
+  .heat-bar { margin-top: 12px; height: 2px; border-radius: 2px; background: rgba(255,255,255,0.06); }
+  .heat-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .trend-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .save-btn { font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 0.5px solid var(--border); background: transparent; color: var(--text2); font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 4px; }
+  .save-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .save-btn.saved { border-color: var(--accent); color: var(--accent); background: rgba(216,90,48,0.1); }
+
+  .saved-section { margin-bottom: 2rem; }
+  .saved-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .saved-chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: var(--surface); border: 0.5px solid var(--border); color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .saved-chip button { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; line-height: 1; padding: 0; transition: color 0.15s; }
+  .saved-chip button:hover { color: var(--accent); }
+
+  .ai-panel { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 20px; background: var(--surface); }
+  .ai-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+  .ai-panel-title { font-size: 15px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .ai-panel-title i { color: var(--accent); font-size: 18px; }
+  .selected-label { font-size: 13px; color: var(--accent); font-weight: 500; }
+
+  .niche-row { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .niche-row label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+  .niche-row select { flex: 1; background: var(--surface2); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; }
+
+  .ai-ideas { display: flex; flex-direction: column; gap: 8px; }
+  .idea-card { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px 16px; border: 0.5px solid var(--border); }
+  .idea-card p { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .idea-platform { font-size: 11px; color: var(--text3); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+
+  .ai-placeholder { font-size: 13px; color: var(--text2); text-align: center; padding: 2rem 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .ai-placeholder i { font-size: 24px; color: var(--text3); }
+
+  .ai-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  .empty-state { grid-column: 1/-1; text-align: center; padding: 3rem; font-size: 13px; color: var(--text2); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .empty-state i { font-size: 28px; color: var(--text3); }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .loading { animation: pulse 1.2s ease infinite; }
+
+  @media (max-width: 600px) {
+    .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .trends-grid { grid-template-columns: 1fr; }
+    .niche-row { flex-direction: column; align-items: flex-start; }
+    .niche-row select { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div>
+      <div class="logo">Trend<span>Pulse</span></div>
+      <div class="tagline">Stay ahead. Create what's hot.</div>
+    </div>
+    <div class="saved-count" id="saved-count">0 saved</div>
+  </div>
+
+  <div class="search-row">
+    <input type="text" id="search-input" placeholder="Search trends..." oninput="filterTrends()" />
+    <button class="btn" onclick="addCustomTrend()"><i class="ti ti-plus"></i> Add trend</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="section-label">Trending now</div>
+  <div class="trends-grid" id="trends-grid"></div>
+
+  <div class="saved-section" id="saved-section" style="display:none">
+    <div class="section-label" style="margin-bottom:8px">Saved trends</div>
+    <div class="saved-list" id="saved-list"></div>
+  </div>
+
+  <div class="ai-panel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-title">
+        <i class="ti ti-sparkles"></i>
+        AI content ideas
+      </div>
+      <div class="selected-label" id="selected-label">No trend selected</div>
+    </div>
+    <div class="niche-row">
+      <label>Your niche:</label>
+      <select id="niche-select">
+        <option value="lifestyle">Lifestyle</option>
+        <option value="fashion">Fashion</option>
+        <option value="fitness">Fitness</option>
+        <option value="food">Food</option>
+        <option value="tech">Tech</option>
+        <option value="finance">Finance</option>
+        <option value="travel">Travel</option>
+        <option value="entrepreneurship">Entrepreneurship</option>
+        <option value="faith">Faith</option>
+      </select>
+    </div>
+    <div id="ai-output">
+      <div class="ai-placeholder">
+        <i class="ti ti-hand-click"></i>
+        Select a trend above to generate content ideas
+      </div>
+    </div>
+    <div class="ai-actions" id="ai-actions" style="display:none">
+      <button class="btn" onclick="generateIdeas()"><i class="ti ti-refresh"></i> Regenerate</button>
+      <button class="btn btn-accent" onclick="goDeeper()">Deep dive this trend <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = ['All','Fashion','Tech','Food','Fitness','Finance','Travel','Culture','Entertainment'];
+const TRENDS = [
+  {id:1,name:'De-influencing movement',cat:'Culture',desc:'Creators telling audiences NOT to buy things. Honest reviews are having a moment.',heat:5,saved:false},
+  {id:2,name:'Micro-dosing productivity',cat:'Fitness',desc:'5-minute habit stacks replacing long morning routines. Tiny actions, compounding results.',heat:4,saved:false},
+  {id:3,name:'Quiet luxury fashion',cat:'Fashion',desc:'No logos, muted tones, elevated basics. Old money aesthetic dominating feeds.',heat:5,saved:false},
+  {id:4,name:'AI side hustles',cat:'Finance',desc:'People sharing how they make income using AI tools. High engagement, high scepticism.',heat:5,saved:false},
+  {id:5,name:'Functional fitness',cat:'Fitness',desc:'Training for real life, not aesthetics. Carries, crawls, odd objects. Growing fast.',heat:3,saved:false},
+  {id:6,name:'Dupe culture',cat:'Fashion',desc:'Finding affordable alternatives to luxury items. TikTok dupes get millions of views.',heat:4,saved:false},
+  {id:7,name:'Digital nomad realism',cat:'Travel',desc:'The unglamorous truth about working remotely abroad. Backlash to perfect nomad content.',heat:3,saved:false},
+  {id:8,name:'Raw food revival',cat:'Food',desc:'Unprocessed, unfiltered food content. Farmers markets, sourdough, nose-to-tail eating.',heat:3,saved:false},
+  {id:9,name:'Founder storytelling',cat:'Finance',desc:'Entrepreneurs documenting the messy reality of building a business. Highly relatable.',heat:4,saved:false},
+  {id:10,name:'Wearable tech style',cat:'Tech',desc:'Tech accessories that look good. Rings, glasses, patches. Fashion meets function.',heat:4,saved:false},
+  {id:11,name:'Anti-hustle culture',cat:'Culture',desc:'Pushback on grind content. Rest, boundaries, and slow living performing well.',heat:3,saved:false},
+  {id:12,name:'Hyper-local food',cat:'Food',desc:'Street food, regional dishes, grandma recipes. Authenticity over aesthetics.',heat:4,saved:false},
+];
+
+const API_KEY = 'PASTE_YOUR_API_KEY_HERE';
+
+let state = { trends: JSON.parse(JSON.stringify(TRENDS)), selected: null, saved: [], activeFilter: 'All', search: '' };
+
+function heatLabel(h){return['','Lukewarm','Warming','Hot','Very hot','On fire'][h]}
+
+function renderFilters(){
+  document.getElementById('filter-row').innerHTML = CATEGORIES.map(c =>
+    `<button class="chip${state.activeFilter===c?' active':''}" onclick="setFilter('${c}')">${c}</button>`
+  ).join('');
+}
+
+function setFilter(cat){ state.activeFilter=cat; renderFilters(); renderTrends(); }
+
+function filterTrends(){ state.search=document.getElementById('search-input').value.toLowerCase(); renderTrends(); }
+
+function renderTrends(){
+  const grid = document.getElementById('trends-grid');
+  let list = state.trends;
+  if(state.activeFilter!=='All') list=list.filter(t=>t.cat===state.activeFilter);
+  if(state.search) list=list.filter(t=>t.name.toLowerCase().includes(state.search)||t.desc.toLowerCase().includes(state.search));
+  if(!list.length){
+    grid.innerHTML='<div class="empty-state"><i class="ti ti-search-off"></i>No trends found. Try adding one!</div>';
+    return;
+  }
+  grid.innerHTML=list.map(t=>`
+    <div class="trend-card${state.selected===t.id?' selected':''}" onclick="selectTrend(${t.id})">
+      <div class="trend-top">
+        <div class="trend-name">${t.name}</div>
+        <div class="heat-badge heat-${t.heat}">${heatLabel(t.heat)}</div>
+      </div>
+      <div class="trend-cat">${t.cat}</div>
+      <div class="trend-desc">${t.desc}</div>
+      <div class="heat-bar"><div class="heat-fill" style="width:${t.heat*20}%"></div></div>
+      <div class="trend-actions">
+        <button class="save-btn${t.saved?' saved':''}" onclick="event.stopPropagation();toggleSave(${t.id})">
+          <i class="ti ti-bookmark${t.saved?'-filled':''}"></i>${t.saved?'Saved':'Save'}
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function selectTrend(id){
+  state.selected=id;
+  const t=state.trends.find(x=>x.id===id);
+  document.getElementById('selected-label').textContent=t.name;
+  document.getElementById('ai-actions').style.display='flex';
+  renderTrends();
+  generateIdeas();
+}
+
+function toggleSave(id){
+  const t=state.trends.find(x=>x.id===id);
+  t.saved=!t.saved;
+  state.saved=state.trends.filter(x=>x.saved);
+  renderTrends();
+  renderSaved();
+}
+
+function renderSaved(){
+  const sec=document.getElementById('saved-section');
+  const list=document.getElementById('saved-list');
+  document.getElementById('saved-count').textContent=state.saved.length+' saved';
+  if(!state.saved.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=state.saved.map(t=>`
+    <div class="saved-chip">${t.name}
+      <button onclick="toggleSave(${t.id})" aria-label="Remove"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+
+function addCustomTrend(){
+  const name=prompt('What trend have you spotted?');
+  if(!name||!name.trim()) return;
+  const cat=prompt('Category?\n(Fashion / Tech / Food / Fitness / Finance / Travel / Culture / Entertainment)')||'Culture';
+  const desc=prompt('Describe it briefly:')||'A new emerging trend.';
+  const heatInput=prompt('Heat score 1-5?');
+  const heat=Math.min(5,Math.max(1,parseInt(heatInput)||3));
+  state.trends.unshift({id:Date.now(),name:name.trim(),cat,desc,heat,saved:false});
+  renderTrends();
+}
+
+async function generateIdeas(){
+  if(!state.selected) return;
+  const t=state.trends.find(x=>x.id===state.selected);
+  const niche=document.getElementById('niche-select').value;
+  const out=document.getElementById('ai-output');
+  out.innerHTML='<div class="ai-placeholder loading"><i class="ti ti-sparkles"></i>Generating ideas...</div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'You are an expert social media strategist for influencers. Return ONLY a JSON array of exactly 4 content ideas. Each object must have: "idea" (one punchy sentence describing the post concept) and "platform" (best platform: TikTok, Instagram Reels, YouTube Shorts, or Instagram Post). No markdown, no preamble, just the raw JSON array.',
+        messages:[{role:'user',content:`Trend: "${t.name}" — ${t.desc}\nInfluencer niche: ${niche}\nGenerate 4 specific, creative content ideas that ride this trend.`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'[]';
+    let ideas;
+    try{ideas=JSON.parse(text.replace(/```json|```/g,'').trim());}catch{ideas=[];}
+    if(!ideas.length){out.innerHTML='<div class="ai-placeholder"><i class="ti ti-alert-circle"></i>Could not parse ideas. Try again!</div>';return;}
+    out.innerHTML='<div class="ai-ideas">'+ideas.map(i=>`
+      <div class="idea-card">
+        <p>${i.idea}</p>
+        <div class="idea-platform"><i class="ti ti-device-mobile"></i> Best for: ${i.platform}</div>
+      </div>`).join('')+'</div>';
+  }catch(e){
+    out.innerHTML='<div class="ai-placeholder"><i class="ti ti-wifi-off"></i>Something went wrong. Check your API key and try again.</div>';
+  }
+}
+
+function goDeeper(){
+  if(!state.selected) return;
+  const t=state.trends.find(x=>x.id===state.selected);
+  const niche=document.getElementById('niche-select').value;
+  alert(`Take this prompt to Claude.ai for a deep dive:\n\n"Give me a deep dive on the '${t.name}' trend for a ${niche} influencer — who's doing it well, why it's working, and how I can build a content series around it."`);
+}
+
+renderFilters();
+renderTrends();
+renderSaved();
+</script>
+</body>
+</html>
